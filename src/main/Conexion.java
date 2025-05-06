@@ -17,7 +17,7 @@ public class Conexion {
         Connection con = null;
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
-            con=DriverManager.getConnection("jdbc:mysql://localhost:3306/serviciofin","root","");   
+            con=DriverManager.getConnection("jdbc:mysql://localhost:3306/acto_grado","root","");   
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "No se pudo conectar la base de datos");
         }
@@ -31,7 +31,7 @@ public class Conexion {
         String[] datos= new String[4];
         try {
             con=conectar();
-            ps=con.prepareStatement("SELECT nombre, area, asiento, estado FROM graduados WHERE cedula=? OR asiento=?");
+            ps=con.prepareStatement("SELECT name, area, seat, state FROM participants WHERE cedula=? OR seat=?");
             ps.setInt(1, parseInt(cedula));
             ps.setInt(2, parseInt(cedula));
             rs=ps.executeQuery();
@@ -49,14 +49,13 @@ public class Conexion {
         return datos;
     }
     
-    public static void asistenciaGraduado(String cedula){
+    public static void asistenciaGraduado(String asiento){
         Connection con=null;
         PreparedStatement ps;
         try {
             con=conectar();
-            ps=con.prepareStatement("UPDATE graduados SET estado=1 WHERE cedula=? OR asiento=?");
-            ps.setInt(1, parseInt(cedula));
-            ps.setInt(2, parseInt(cedula));
+            ps=con.prepareStatement("UPDATE participants SET state=1 WHERE seat=?");
+            ps.setInt(1, parseInt(asiento));
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "Registro de asistencia exitoso");
             
@@ -70,7 +69,7 @@ public class Conexion {
         PreparedStatement ps;
         try {
             con=conectar();
-
+/*
             ps=con.prepareStatement("INSERT INTO `cambios`(`id_bien`, `tipo`, `reincorporacion`, `motivo`, `fecha`) VALUES (?,?,?,?,?)");
             ps.setInt(1, id_bien);
             ps.setString(2,tipo);
@@ -79,9 +78,31 @@ public class Conexion {
             ps.setString(5,fecha_s);
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "Registro de asistencia exitoso");
-            
+            */
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "No se pudo registrar la asistencia");
         }
+    }
+    
+    public static boolean login(String usuario,String pass){
+        Connection con=null;
+        boolean validor=false;
+        
+        PreparedStatement ps;
+        ResultSet rs;
+        try{
+            con=conectar();
+            ps=con.prepareStatement("SELECT * FROM users WHERE user=? and password=? and state=1");
+            ps.setString(1,usuario);
+            ps.setString(2, pass);
+            rs=ps.executeQuery();
+            if (rs.next()) {
+                
+                validor=true;
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "No se pudo realizar la consulta");
+        }
+        return validor;
     }
 }

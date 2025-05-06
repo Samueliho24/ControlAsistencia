@@ -1,20 +1,31 @@
-
 package main;
 
-import Ventanas.Menu;
+import Ventanas.Login;
+import java.io.IOException;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Samuel Chourio
  */
 public class Main {
-
-    /**
-     * @param args the command line arguments
-     */
+    private static Process xamppStart;
+    
     public static void main(String[] args) {
-        Menu menu = new Menu();
-        menu.setVisible(true);
+        try {
+            xamppStart = Runtime.getRuntime().exec("C:\\xampp\\xampp-control.exe");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error al iniciar XAMPP: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        Login login = new Login();
+        login.setVisible(true);
+    }
+    
+    public static void cerrarXampp(){
+        xamppStart.destroy();
+        
     }
     
 }
