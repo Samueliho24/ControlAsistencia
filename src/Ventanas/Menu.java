@@ -10,6 +10,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import main.DatabaseManager;
+import main.Main;
 import main.Pdf;
 
 
@@ -107,6 +108,11 @@ public class Menu extends javax.swing.JFrame {
         setTitle("Control de asistencia");
         setMinimumSize(new java.awt.Dimension(950, 500));
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 
         fondo.setBackground(new java.awt.Color(255, 255, 255));
@@ -403,6 +409,11 @@ public class Menu extends javax.swing.JFrame {
             buscar();
         }
     }//GEN-LAST:event_buscarTxtKeyPressed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        Main.cerrarXampp();
+        dispose();
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
