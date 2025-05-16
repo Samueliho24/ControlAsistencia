@@ -4,14 +4,12 @@
  */
 package Ventanas;
 
-import static javafx.application.Platform.exit;
 import main.Conexion;
-import Ventanas.Consulta;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
-import main.Main;
+import main.DatabaseManager;
 import main.Pdf;
 
 
@@ -25,7 +23,7 @@ public class Menu extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         reportePane.setVisible(false);
-        cedulaTxt.addKeyListener(new KeyAdapter() {
+        buscarTxt.addKeyListener(new KeyAdapter() {
             private ActionEvent evt;
         @Override
         public void keyPressed(KeyEvent e) {
@@ -35,9 +33,38 @@ public class Menu extends javax.swing.JFrame {
         }
         });
     }
+    private void limpiar(){
+        buscarTxt.setText("");
+        nombreTxt.setText("");
+        cedulaTxt.setText("");
+        asientoTxt.setText("");
+        estadoTxt.setText("");
+        buscarTxt.setEditable(true);
+        buscarTxt.requestFocusInWindow();
+    }
 
     
-    
+    private void buscar(){
+        String[] datos=Conexion.consultaGraduado(buscarTxt.getText());
+        String estado;
+        if(datos==null){
+            limpiar();
+        }
+        else{
+            nombreTxt.setText(datos[0]);
+            cedulaTxt.setText(datos[3]);
+            asientoTxt.setText(datos[1]);
+            
+            if(datos[2].equals("0")){
+                estado = "No ha entrado";
+            }
+            else{
+                estado = "Ha entrado";
+            }
+            estadoTxt.setText(estado);
+            buscarTxt.setEditable(false);
+        }
+    }
     
     
     @SuppressWarnings("unchecked")
@@ -51,19 +78,21 @@ public class Menu extends javax.swing.JFrame {
         pdfBtn = new javax.swing.JLabel();
         productosPane = new javax.swing.JPanel();
         tituloPanel = new javax.swing.JLabel();
-        cedulaLabel = new javax.swing.JLabel();
-        cedulaTxt = new javax.swing.JTextField();
+        buscarLabel = new javax.swing.JLabel();
+        buscarTxt = new javax.swing.JTextField();
         nombreLabel = new javax.swing.JLabel();
         nombreTxt = new javax.swing.JLabel();
         limpiarBtn = new javax.swing.JButton();
         buscarBtn = new javax.swing.JButton();
         areaLabel = new javax.swing.JLabel();
-        areaTxt = new javax.swing.JLabel();
         asientoTxt = new javax.swing.JLabel();
+        cedulaTxt = new javax.swing.JLabel();
         asientoLabel = new javax.swing.JLabel();
         estadoLabel = new javax.swing.JLabel();
         estadoTxt = new javax.swing.JLabel();
         registrarBtn = new javax.swing.JButton();
+        cedulaLabel = new javax.swing.JLabel();
+        areaTxt1 = new javax.swing.JLabel();
         tituloPane = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         menuPane = new javax.swing.JPanel();
@@ -108,6 +137,9 @@ public class Menu extends javax.swing.JFrame {
         pdfBtn.setFont(new java.awt.Font("Segoe UI Symbol", 0, 25)); // NOI18N
         pdfBtn.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         pdfBtn.setText("PDF");
+        pdfBtn.setToolTipText("");
+        pdfBtn.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        pdfBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         pdfBtn.setMaximumSize(new java.awt.Dimension(180, 100));
         pdfBtn.setMinimumSize(new java.awt.Dimension(180, 100));
         pdfBtn.setPreferredSize(new java.awt.Dimension(180, 70));
@@ -134,24 +166,27 @@ public class Menu extends javax.swing.JFrame {
         tituloPanel.setPreferredSize(new java.awt.Dimension(320, 40));
         productosPane.add(tituloPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(215, 20, -1, -1));
 
-        cedulaLabel.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
-        cedulaLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        cedulaLabel.setText("Cedula:");
-        productosPane.add(cedulaLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 80, -1, 30));
+        buscarLabel.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        buscarLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        buscarLabel.setText("Cedula o asiento:");
+        productosPane.add(buscarLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 80, -1, 30));
 
-        cedulaTxt.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
-        cedulaTxt.setMaximumSize(new java.awt.Dimension(140, 30));
-        cedulaTxt.setMinimumSize(new java.awt.Dimension(140, 30));
-        cedulaTxt.setPreferredSize(new java.awt.Dimension(140, 30));
-        cedulaTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+        buscarTxt.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        buscarTxt.setMaximumSize(new java.awt.Dimension(140, 30));
+        buscarTxt.setMinimumSize(new java.awt.Dimension(140, 30));
+        buscarTxt.setPreferredSize(new java.awt.Dimension(140, 30));
+        buscarTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                buscarTxtKeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                cedulaTxtKeyReleased(evt);
+                buscarTxtKeyReleased(evt);
             }
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                cedulaTxtKeyTyped(evt);
+                buscarTxtKeyTyped(evt);
             }
         });
-        productosPane.add(cedulaTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 80, 140, -1));
+        productosPane.add(buscarTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 80, 140, -1));
 
         nombreLabel.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         nombreLabel.setText("Nombre:");
@@ -159,7 +194,7 @@ public class Menu extends javax.swing.JFrame {
 
         nombreTxt.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         nombreTxt.setText(" ");
-        productosPane.add(nombreTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 140, 270, -1));
+        productosPane.add(nombreTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 140, 400, -1));
 
         limpiarBtn.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         limpiarBtn.setText("Limpiar");
@@ -187,16 +222,15 @@ public class Menu extends javax.swing.JFrame {
 
         areaLabel.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         areaLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        areaLabel.setText("Area:");
         productosPane.add(areaLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 180, 70, -1));
 
-        areaTxt.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
-        areaTxt.setText(" ");
-        productosPane.add(areaTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 180, 270, -1));
-
         asientoTxt.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
-        asientoTxt.setText("  ");
+        asientoTxt.setText(" ");
         productosPane.add(asientoTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 220, 270, -1));
+
+        cedulaTxt.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        cedulaTxt.setText("  ");
+        productosPane.add(cedulaTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 180, 270, -1));
 
         asientoLabel.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         asientoLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -223,6 +257,15 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         productosPane.add(registrarBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 320, 250, -1));
+
+        cedulaLabel.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        cedulaLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        cedulaLabel.setText("Cedula:");
+        productosPane.add(cedulaLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 180, 70, -1));
+
+        areaTxt1.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        areaTxt1.setText(" ");
+        productosPane.add(areaTxt1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 180, 270, -1));
 
         fondo.add(productosPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 70, -1, -1));
 
@@ -283,7 +326,7 @@ public class Menu extends javax.swing.JFrame {
 
         AñadirBtn.setFont(new java.awt.Font("Segoe UI Symbol", 0, 25)); // NOI18N
         AñadirBtn.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        AñadirBtn.setText("Añadir");
+        AñadirBtn.setText("Restablecer");
         AñadirBtn.setMaximumSize(new java.awt.Dimension(180, 100));
         AñadirBtn.setMinimumSize(new java.awt.Dimension(180, 100));
         AñadirBtn.setPreferredSize(new java.awt.Dimension(180, 100));
@@ -323,63 +366,43 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_pdfBtnMouseClicked
 
     private void AñadirBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AñadirBtnMouseClicked
+        DatabaseManager.resetDatabase();
         //Conexion.anadir(cedula);
     }//GEN-LAST:event_AñadirBtnMouseClicked
 
     private void limpiarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarBtnActionPerformed
-        cedulaTxt.setText("");
-        nombreTxt.setText("");
-        areaTxt.setText("");
-        asientoTxt.setText("");
-        estadoTxt.setText("");
-        cedulaTxt.setEditable(true);
+        limpiar();
     }//GEN-LAST:event_limpiarBtnActionPerformed
 
     private void buscarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarBtnActionPerformed
-        String[] datos=Conexion.consultaGraduado(cedulaTxt.getText());
-        String estado;
-        if(datos==null){
-            cedulaTxt.setText("");
-            nombreTxt.setText("");
-            areaTxt.setText("");
-            asientoTxt.setText("");
-            estadoTxt.setText("");
-            cedulaTxt.setEditable(true);
-        }
-        else{
-            nombreTxt.setText(datos[0]);
-            areaTxt.setText(datos[1]);
-            asientoTxt.setText(datos[2]);
-            
-            if(datos[3].equals("0")){
-                estado = "No ha entrado";
-            }
-            else{
-                estado = "Ha entrado";
-            }
-            estadoTxt.setText(estado);
-            cedulaTxt.setEditable(false);
-        }
+        buscar();
     }//GEN-LAST:event_buscarBtnActionPerformed
 
     private void registrarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrarBtnActionPerformed
         if(estadoTxt.getText().equals("Ha entrado")){
             JOptionPane.showMessageDialog(null, "Ya el graduando esta registrado");
-            
         }else{
             Conexion.asistenciaGraduado(asientoTxt.getText());
         }
+        
+        limpiar();
     }//GEN-LAST:event_registrarBtnActionPerformed
 
-    private void cedulaTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cedulaTxtKeyTyped
+    private void buscarTxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscarTxtKeyTyped
         char car = evt.getKeyChar();
         if((car<'0' || car>'9')) evt.consume();
-    }//GEN-LAST:event_cedulaTxtKeyTyped
+    }//GEN-LAST:event_buscarTxtKeyTyped
 
-    private void cedulaTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cedulaTxtKeyReleased
+    private void buscarTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscarTxtKeyReleased
         char car = evt.getKeyChar();
         if((car<'0' || car>'9')) evt.consume();
-    }//GEN-LAST:event_cedulaTxtKeyReleased
+    }//GEN-LAST:event_buscarTxtKeyReleased
+
+    private void buscarTxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscarTxtKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            buscar();
+        }
+    }//GEN-LAST:event_buscarTxtKeyPressed
 
     /**
      * @param args the command line arguments
@@ -404,12 +427,14 @@ public class Menu extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel AñadirBtn;
     private javax.swing.JLabel areaLabel;
-    private javax.swing.JLabel areaTxt;
+    private javax.swing.JLabel areaTxt1;
     private javax.swing.JLabel asientoLabel;
     private javax.swing.JLabel asientoTxt;
     private javax.swing.JButton buscarBtn;
+    private javax.swing.JLabel buscarLabel;
+    private javax.swing.JTextField buscarTxt;
     private javax.swing.JLabel cedulaLabel;
-    private javax.swing.JTextField cedulaTxt;
+    private javax.swing.JLabel cedulaTxt;
     private javax.swing.JLabel estadoLabel;
     private javax.swing.JLabel estadoTxt;
     private javax.swing.JPanel fondo;

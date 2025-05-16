@@ -3,6 +3,7 @@ package main;
 import Ventanas.Login;
 import java.io.IOException;
 import javax.swing.JOptionPane;
+import main.DatabaseManager;
 
 /**
  *
@@ -14,6 +15,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             xamppStart = Runtime.getRuntime().exec("C:\\xampp\\xampp-control.exe");
+            DatabaseManager.initializeDatabase();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Error al iniciar XAMPP: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             return;

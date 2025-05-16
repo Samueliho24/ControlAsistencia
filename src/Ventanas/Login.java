@@ -4,6 +4,7 @@
  */
 package Ventanas;
 
+import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import main.Conexion;
 import main.Main;
@@ -23,6 +24,24 @@ public class Login extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
     }
 
+    private void iniciar(){
+        String data,pass;
+        data=usuaTxt.getText().trim();
+        pass=contraTxt.getText().trim();
+        if (!data.isEmpty() && !pass.isEmpty()) {
+            boolean op=Conexion.login(data, pass);
+            if (op) {
+                Menu menu = new Menu();
+                menu.setVisible(true);
+                this.dispose();
+            }else{
+                JOptionPane.showMessageDialog(null, "Error, no ha digitado correctamente los datos");
+            }
+              
+        }else{
+            JOptionPane.showMessageDialog(null, "Error no ha digitado nada");
+        }
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -72,6 +91,11 @@ public class Login extends javax.swing.JFrame {
         usuaTxt.setMaximumSize(new java.awt.Dimension(270, 30));
         usuaTxt.setMinimumSize(new java.awt.Dimension(270, 30));
         usuaTxt.setPreferredSize(new java.awt.Dimension(270, 30));
+        usuaTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                usuaTxtKeyPressed(evt);
+            }
+        });
         LoginPane.add(usuaTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 290, -1, -1));
 
         contraTxt.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
@@ -79,6 +103,11 @@ public class Login extends javax.swing.JFrame {
         contraTxt.setMaximumSize(new java.awt.Dimension(240, 30));
         contraTxt.setMinimumSize(new java.awt.Dimension(240, 30));
         contraTxt.setPreferredSize(new java.awt.Dimension(240, 30));
+        contraTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                contraTxtKeyPressed(evt);
+            }
+        });
         LoginPane.add(contraTxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 370, -1, -1));
 
         limpiarBtn.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -133,36 +162,14 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void limpiarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarBtnActionPerformed
-        /**
-         * Limpia las cajas de texto
-         */
+        
         usuaTxt.setText("");
         contraTxt.setText("");
+        usuaTxt.requestFocusInWindow();
     }//GEN-LAST:event_limpiarBtnActionPerformed
 
     private void iniciarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iniciarBtnActionPerformed
-        /**
-         * Proceso de Inicio de sesion
-         * Se envian los parametros de usuario y contraseña
-         * Luego con una funcion derivada de la clase Conexion
-         * Se obtiene un dato booleano para comprobar si puede ingresar o no
-         */
-        String data,pass;
-        data=usuaTxt.getText().trim();
-        pass=contraTxt.getText().trim();
-        if (!data.isEmpty() && !pass.isEmpty()) {
-            boolean op=Conexion.login(data, pass);
-            if (op) {
-                Menu menu = new Menu();
-                menu.setVisible(true);
-                this.dispose();
-            }else{
-                JOptionPane.showMessageDialog(null, "Error, no ha digitado correctamente los datos");
-            }
-              
-        }else{
-            JOptionPane.showMessageDialog(null, "Error no ha digitado nada");
-        }
+        iniciar();
     }//GEN-LAST:event_iniciarBtnActionPerformed
 
     private void mostrBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mostrBtnMouseClicked
@@ -181,6 +188,18 @@ public class Login extends javax.swing.JFrame {
         Main.cerrarXampp();
         dispose();
     }//GEN-LAST:event_formWindowClosing
+
+    private void contraTxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_contraTxtKeyPressed
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER) {
+            iniciar();
+        }
+    }//GEN-LAST:event_contraTxtKeyPressed
+
+    private void usuaTxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usuaTxtKeyPressed
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER) {
+            iniciar();
+        }
+    }//GEN-LAST:event_usuaTxtKeyPressed
 
     /**
      * @param args the command line arguments

@@ -31,13 +31,13 @@ public class Conexion {
         String[] datos= new String[4];
         try {
             con=conectar();
-            ps=con.prepareStatement("SELECT name, area, seat, state FROM participants WHERE cedula=? OR seat=?");
+            ps=con.prepareStatement("SELECT name, seat, state, cedula FROM participants WHERE cedula=? OR seat=?");
             ps.setInt(1, parseInt(cedula));
             ps.setInt(2, parseInt(cedula));
             rs=ps.executeQuery();
             if (rs.next()){
                 datos[0]=rs.getString(1);
-                datos[1]=rs.getString(2);
+                datos[1]=String.valueOf( rs.getInt(2));
                 datos[2]=String.valueOf( rs.getInt(3));
                 datos[3]=String.valueOf( rs.getInt(4));
                 
@@ -64,25 +64,6 @@ public class Conexion {
         }
     }
     
-    public static void anadir(String cedula){
-        Connection con=null;
-        PreparedStatement ps;
-        try {
-            con=conectar();
-/*
-            ps=con.prepareStatement("INSERT INTO `cambios`(`id_bien`, `tipo`, `reincorporacion`, `motivo`, `fecha`) VALUES (?,?,?,?,?)");
-            ps.setInt(1, id_bien);
-            ps.setString(2,tipo);
-            ps.setString(3,fecha_r);
-            ps.setString(4,motivo);
-            ps.setString(5,fecha_s);
-            ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Registro de asistencia exitoso");
-            */
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "No se pudo registrar la asistencia");
-        }
-    }
     
     public static boolean login(String usuario,String pass){
         Connection con=null;
