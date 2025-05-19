@@ -1,6 +1,6 @@
 package main;
 
-import Ventanas.Login;
+import Ventanas.Menu;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 import main.DatabaseManager;
@@ -21,8 +21,8 @@ public class Main {
             return;
         }
         
-        Login login = new Login();
-        login.setVisible(true);
+        Menu menu = new Menu();
+        menu.setVisible(true);
     }
     
     public static void cerrarXampp(){
